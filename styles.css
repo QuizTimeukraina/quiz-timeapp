@@ -1,0 +1,56 @@
+/* Основные стили */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #0a1428, #1a2744, #0f1b2e);
+    color: #00ffff;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 80px;
+}
+
+/* ... все остальные стили из вашего оригинального файла ... */
+
+/* Стили для Stripe Elements */
+.StripeElement {
+    background: rgba(0,255,255,0.1);
+    padding: 15px;
+    border: 1px solid #00ffff;
+    border-radius: 10px;
+    margin: 15px 0;
+    color: white;
+}
+
+.subscription-features {
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(0,255,255,0.1);
+    border-radius: 10px;
+    text-align: left;
+}
+
+.subscription-features li {
+    margin: 10px 0;
+    list-style-type: none;
+    position: relative;
+    padding-left: 25px;
+}
+
+.subscription-features li:before {
+    content: "✓";
+    color: #00ff88;
+    position: absolute;
+    left: 0;
+}

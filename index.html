@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizTime Premium - Українська Вікторина</title>
+    <!-- Подключение CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Подключение Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <!-- Подключение JavaScript с атрибутом defer -->
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <!-- Попап подписки -->
+    <div id="subscribePopup">
+        <form id="stripePaymentForm">
+            <h2 style="color:#00ff88">🔒 PREMIUM ПОДПИСКА</h2>
+            <p>Доступ за $2.99/месяц откроет:</p>
+            
+            <div class="subscription-features">
+                <ul>
+                    <li>Полную версию викторины</li>
+                    <li>Участие в рейтинге за $100-$1000</li>
+                    <li>Отсутствие рекламы</li>
+                    <li>Отмена в любой момент</li>
+                </ul>
+            </div>
+            
+            <div id="cardElement" class="StripeElement"></div>
+            
+            <button id="submitBtn" class="btn" type="submit">
+                ОПЛАТИТЬ $2.99/МЕС
+            </button>
+            
+            <button class="btn btn-secondary" onclick="hideSubscribePopup()" style="margin-top: 10px;">
+                Продолжить бесплатно (с ограничениями)
+            </button>
+            
+            <p style="font-size:12px; margin-top:20px;">
+                Нажимая кнопку, вы соглашаетесь с <a href="#" style="color:#00ffff">условиями</a>.
+            </p>
+        </form>
+    </div>
+
+    <!-- Остальная часть вашего HTML (как в оригинале) -->
+    <div class="score-display" id="scoreDisplay">
+        💰 <span id="coinsDisplay">0</span> | ⭐ <span id="pointsDisplay">0</span>
+    </div>
+
+    <div class="container">
+        <!-- Все экраны (homeScreen, levelScreen и т.д.) -->
+        <!-- ... ваш HTML код для экранов ... -->
+    </div>
+
+    <!-- Аудио элементы -->
+    <audio id="sound-correct" src="assets/sounds/correct.mp3"></audio>
+    <audio id="sound-wrong" src="assets/sounds/wrong.mp3"></audio>
+    <audio id="sound-timer" src="assets/sounds/timer.mp3"></audio>
+    <audio id="background-music" src="assets/sounds/music.mp3" loop></audio>
+
+    <div style="position: fixed; bottom: 15px; right: 15px; z-index: 1001;">
+        <button class="btn btn-secondary" onclick="toggleMusic()">🎵 Музыка Вкл/Выкл</button>
+    </div>
+</body>
+</html>
