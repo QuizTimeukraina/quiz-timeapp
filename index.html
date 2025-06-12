@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizTime Premium - Українська Вікторина</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <!-- Попап подписки -->
+    <div id="subscribePopup" class="popup">
+        <form id="stripePaymentForm">
+            <h2 style="color:#00ff88">🔒 PREMIUM ПОДПИСКА</h2>
+            <p>Доступ за $2.99/месяц откроет:</p>
+            
+            <div class="subscription-features">
+                <ul>
+                    <li>Полную версию викторины</li>
+                    <li>Участие в рейтинге за $100-$1000</li>
+                    <li>Отсутствие рекламы</li>
+                    <li>Отмена в любой момент</li>
+                </ul>
+            </div>
+            
+            <div id="cardElement" class="StripeElement"></div>
+            
+            <button id="submitBtn" class="btn" type="submit">
+                ОПЛАТИТЬ $2.99/МЕС
+            </button>
+            
+            <button class="btn btn-secondary" onclick="hideSubscribePopup()" style="margin-top: 10px;">
+                Продолжить бесплатно (с ограничениями)
+            </button>
+            
+            <p style="font-size:12px; margin-top:20px;">
+                Нажимая кнопку, вы соглашаетесь с <a href="#" style="color:#00ffff">условиями</a>.
+            </p>
+        </form>
+    </div>
+
+    <!-- Отображение счета -->
+    <div class="score-display" id="scoreDisplay">
+        💰 <span id="coinsDisplay">0</span> | ⭐ <span id="pointsDisplay">0</span>
+    </div>
+
+    <div class="container">
+        <!-- Главный экран -->
+        <div id="homeScreen" class="screen active">
+            <h1>QuizTime <span style="color:#00ff88">Premium</span></h1>
+            <p class="subtitle">Тест на знание Украины и не только</p>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-value" id="totalGamesStat">0</span>
+                    <span class="stat-label">Игр</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="correctAnswersStat">0</span>
+                    <span class="stat-label">Правильных ответов</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="bestScoreStat">0</span>
+                    <span class="stat-label">Рекорд</span>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="showLevelScreen()">ИГРАТЬ</button>
+            <button class="btn btn-secondary" onclick="showSubscribePopup()">PREMIUM</button>
+        </div>
+
+        <!-- Экран выбора уровня -->
+        <div id="levelScreen" class="screen">
+            <h2>Выберите уровень сложности</h2>
+            
+            <div class="level-options">
+                <button class="btn level-btn" onclick="startGame('easy')">
+                    <span class="level-name">Легкий</span>
+                    <span class="level-desc">Для новичков</span>
+                </button>
+                
+                <button class="btn level-btn" onclick="startGame('medium')">
+                    <span class="level-name">Средний</span>
+                    <span class="level-desc">Для знатоков</span>
+                </button>
+                
+                <button class="btn level-btn" onclick="startGame('hard')">
+                    <span class="level-name">Сложный</span>
+                    <span class="level-desc">Для экспертов</span>
+                </button>
+            </div>
+            
+            <button class="btn btn-secondary" onclick="showHomeScreen()">НАЗАД</button>
+        </div>
+
+        <!-- Игровой экран -->
+        <div id="gameScreen" class="screen">
+            <div class="game-header">
+                <div class="timer-container">
+                    <div class="timer-bar" id="timerBar"></div>
+                    <span id="timerDisplay">30</span>
+                </div>
+                <div class="question-counter" id="questionCounter">1/15</div>
+            </div>
+            
+            <div class="question-container">
+                <h3 id="questionText">Текст вопроса</h3>
+            </div>
+            
+            <div class="answer-options" id="answerOptions">
+                <button class="answer-btn" onclick="checkAnswer(0)">Вариант 1</button>
+                <button class="answer-btn" onclick="checkAnswer(1)">Вариант 2</button>
+                <button class="answer-btn" onclick="checkAnswer(2)">Вариант 3</button>
+                <button class="answer-btn" onclick="checkAnswer(3)">Вариант 4</button>
+            </div>
+            
+            <div class="game-actions">
+                <button class="btn btn-secondary" id="freeAnswerBtn" onclick="useFreeAnswer()">Бесплатный ответ (2/2)</button>
+                <button class="btn btn-secondary" onclick="endGame()">ЗАВЕРШИТЬ</button>
+            </div>
+        </div>
+
+        <!-- Экран результатов -->
+        <div id="resultScreen" class="screen">
+            <h2>Результаты игры</h2>
+            
+            <div class="result-stats">
+                <div class="result-stat">
+                    <span class="result-value" id="finalScore">0</span>
+                    <span class="result-label">Очки</span>
+                </div>
+                <div class="result-stat">
+                    <span class="result-value" id="finalCoins">0</span>
+                    <span class="result-label">Монеты</span>
+                </div>
+                <div class="result-stat">
+                    <span class="result-value" id="correctAnswers">0/15</span>
+                    <span class="result-label">Правильные ответы</span>
+                </div>
+            </div>
+            
+            <div class="result-message" id="resultMessage"></div>
+            
+            <div class="result-actions">
+                <button class="btn" onclick="startGame(gameState.currentLevel)">ИГРАТЬ СНОВА</button>
+                <button class="btn btn-secondary" onclick="showHomeScreen()">ГЛАВНОЕ МЕНЮ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Аудио элементы -->
+    <audio id="sound-correct" src="assets/sounds/correct.mp3"></audio>
+    <audio id="sound-wrong" src="assets/sounds/wrong.mp3"></audio>
+    <audio id="sound-timer" src="assets/sounds/timer.mp3"></audio>
+    <audio id="background-music" src="assets/sounds/music.mp3" loop></audio>
+
+    <div style="position: fixed; bottom: 15px; right: 15px; z-index: 1001;">
+        <button class="btn btn-secondary" onclick="toggleMusic()">🎵 Музыка Вкл/Выкл</button>
+    </div>
+</body>
+</html>

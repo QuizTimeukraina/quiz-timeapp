@@ -1,0 +1,390 @@
+/* Основные стили */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #0a1428, #1a2744, #0f1b2e);
+    color: #00ffff;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 80px;
+}
+
+/* Кнопки */
+.btn {
+    background: linear-gradient(135deg, #00ff88, #00ffff);
+    color: #0a1428;
+    border: none;
+    padding: 12px 25px;
+    margin: 10px 5px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #00ffff;
+    border: 1px solid #00ffff;
+}
+
+.btn-secondary:hover {
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
+}
+
+/* Отображение счета */
+.score-display {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 255, 255, 0.1);
+    padding: 10px 15px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 100;
+}
+
+/* Стили для экранов */
+.screen {
+    display: none;
+    width: 100%;
+    text-align: center;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* Главный экран */
+#homeScreen h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #00ff88, #00ffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    opacity: 0.8;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 30px 0;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.stat-item {
+    background: rgba(0, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    min-width: 100px;
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 24px;
+    color: #00ff88;
+    display: block;
+}
+
+.stat-label {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* Экран выбора уровня */
+.level-options {
+    margin: 30px 0;
+}
+
+.level-btn {
+    display: block;
+    margin: 15px auto;
+    width: 100%;
+    max-width: 300px;
+    text-align: left;
+    padding: 15px 20px;
+}
+
+.level-name {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.level-desc {
+    display: block;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+/* Игровой экран */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    align-items: center;
+    width: 100%;
+}
+
+.timer-container {
+    width: 60%;
+    position: relative;
+    height: 10px;
+    background: rgba(0, 255, 255, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.timer-bar {
+    height: 100%;
+    background: #00ff88;
+    border-radius: 5px;
+    transition: width 0.1s linear;
+}
+
+#timerDisplay {
+    margin-left: 15px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.question-counter {
+    background: rgba(0, 255, 255, 0.1);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.question-container {
+    background: rgba(0, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+#questionText {
+    font-size: 1.2rem;
+    line-height: 1.5;
+}
+
+.answer-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.answer-btn {
+    padding: 15px;
+    background: rgba(0, 255, 255, 0.1);
+    border: 1px solid #00ffff;
+    border-radius: 10px;
+    color: #00ffff;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 16px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.answer-btn:hover {
+    background: rgba(0, 255, 255, 0.2);
+}
+
+.answer-btn.correct {
+    background: rgba(0, 255, 136, 0.2);
+    border-color: #00ff88;
+}
+
+.answer-btn.wrong {
+    background: rgba(255, 85, 85, 0.2);
+    border-color: #ff5555;
+}
+
+.game-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    width: 100%;
+    gap: 15px;
+}
+
+.game-actions .btn {
+    margin: 0;
+    flex: 1;
+}
+
+/* Экран результатов */
+.result-stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 30px 0;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.result-stat {
+    background: rgba(0, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    min-width: 100px;
+    flex: 1;
+}
+
+.result-value {
+    font-size: 24px;
+    color: #00ff88;
+    display: block;
+}
+
+.result-label {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.result-message {
+    font-size: 18px;
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(0, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.result-actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.result-actions .btn {
+    margin: 0;
+    flex: 1;
+    max-width: 200px;
+}
+
+/* Попап подписки */
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup form {
+    background: #0a1428;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 500px;
+    width: 90%;
+    border: 1px solid #00ffff;
+    text-align: center;
+}
+
+.popup h2 {
+    margin-bottom: 15px;
+}
+
+.popup p {
+    margin-bottom: 20px;
+}
+
+/* Стили для Stripe Elements */
+.StripeElement {
+    background: rgba(0,255,255,0.1);
+    padding: 15px;
+    border: 1px solid #00ffff;
+    border-radius: 10px;
+    margin: 15px 0;
+    color: white;
+}
+
+.subscription-features {
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(0,255,255,0.1);
+    border-radius: 10px;
+    text-align: left;
+}
+
+.subscription-features li {
+    margin: 10px 0;
+    list-style-type: none;
+    position: relative;
+    padding-left: 25px;
+}
+
+.subscription-features li:before {
+    content: "✓";
+    color: #00ff88;
+    position: absolute;
+    left: 0;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    .answer-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .result-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .result-actions .btn {
+        max-width: 100%;
+    }
+    
+    .game-actions {
+        flex-direction: column;
+    }
+}
