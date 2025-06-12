@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizTime Premium</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background: #18222d;
+            color: #ffffff;
+            padding: 12px;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+        
+        .screen {
+            display: none;
+            flex-direction: column;
+            height: calc(100vh - 24px);
+        }
+        
+        .screen.active {
+            display: flex;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 16px 0;
+        }
+        
+        .stat-item {
+            background: #2b3a48;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #5ac8fa;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        
+        .btn {
+            background: #5ac8fa;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .btn-secondary {
+            background: #2b3a48;
+            color: #fff;
+        }
+        
+        .level-btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0;
+        }
+        
+        .question-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            margin-bottom: 16px;
+            flex-grow: 1;
+        }
+        
+        .answer-btn {
+            background: #2b3a48;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 6px 0;
+            color: #fff;
+            text-align: left;
+        }
+        
+        .timer-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .timer-bar {
+            height: 4px;
+            background: #5ac8fa;
+            border-radius: 2px;
+            flex-grow: 1;
+            margin-right: 8px;
+        }
+        
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 16px;
+        }
+        
+        .popup-content {
+            background: #2b3a48;
+            border-radius: 12px;
+            padding: 16px;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+        }
+        
+        .feature-item:before {
+            content: "✓";
+            color: #34c759;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Главный экран -->
+    <div id="homeScreen" class="screen active">
+        <div class="header">
+            <div class="title">QuizTime Premium</div>
+        </div>
+        <div>Тест на знание Украины и не только</div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="totalGamesStat">0</div>
+                <div class="stat-label">Игр</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="correctAnswersStat">0</div>
+                <div class="stat-label">Правильных ответов</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="bestScoreStat">0</div>
+                <div class="stat-label">Рекорд</div>
+            </div>
+        </div>
+        
+        <button class="btn" onclick="showLevelScreen()">ИГРАТЬ</button>
+        <button class="btn btn-secondary" onclick="showSubscribePopup()">PREMIUM</button>
+    </div>
+
+    <!-- Экран выбора уровня -->
+    <div id="levelScreen" class="screen">
+        <div class="header">
+            <div class="title">Выберите уровень</div>
+        </div>
+        
+        <button class="btn level-btn" onclick="startGame('easy')">
+            <span>Легкий</span>
+            <span style="opacity: 0.7;">Для новичков</span>
+        </button>
+        
+        <button class="btn level-btn" onclick="startGame('medium')">
+            <span>Средний</span>
+            <span style="opacity: 0.7;">Для знатоков</span>
+        </button>
+        
+        <button class="btn level-btn" onclick="startGame('hard')">
+            <span>Сложный</span>
+            <span style="opacity: 0.7;">Для экспертов</span>
+        </button>
+        
+        <button class="btn btn-secondary" onclick="showHomeScreen()">НАЗАД</button>
+    </div>
+
+    <!-- Игровой экран -->
+    <div id="gameScreen" class="screen">
+        <div class="header">
+            <div class="timer-container">
+                <div class="timer-bar" id="timerBar" style="width: 100%"></div>
+                <div id="timerDisplay">30</div>
+            </div>
+            <div id="questionCounter">1/15</div>
+        </div>
+        
+        <div class="question-container">
+            <div class="question-text" id="questionText">Текст вопроса</div>
+            
+            <div id="answerOptions">
+                <button class="answer-btn" onclick="checkAnswer(0)">Вариант 1</button>
+                <button class="answer-btn" onclick="checkAnswer(1)">Вариант 2</button>
+                <button class="answer-btn" onclick="checkAnswer(2)">Вариант 3</button>
+                <button class="answer-btn" onclick="checkAnswer(3)">Вариант 4</button>
+            </div>
+        </div>
+        
+        <button class="btn btn-secondary" id="freeAnswerBtn" onclick="useFreeAnswer()">Бесплатный ответ (2/2)</button>
+        <button class="btn btn-secondary" onclick="endGame()">ЗАВЕРШИТЬ</button>
+    </div>
+
+    <!-- Экран результатов -->
+    <div id="resultScreen" class="screen">
+        <div class="header">
+            <div class="title">Результаты</div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="finalScore">0</div>
+                <div class="stat-label">Очки</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="finalCoins">0</div>
+                <div class="stat-label">Монеты</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="correctAnswers">0/15</div>
+                <div class="stat-label">Правильные ответы</div>
+            </div>
+        </div>
+        
+        <div style="margin: 16px 0; text-align: center;" id="resultMessage"></div>
+        
+        <button class="btn" onclick="startGame(gameState.currentLevel)">ИГРАТЬ СНОВА</button>
+        <button class="btn btn-secondary" onclick="showHomeScreen()">ГЛАВНОЕ МЕНЮ</button>
+    </div>
+
+    <!-- Попап подписки -->
+    <div id="subscribePopup" class="popup">
+        <div class="popup-content">
+            <div style="font-weight: 600; font-size: 18px; margin-bottom: 12px;">🔍 PREMIUM ПОДПИСКА</div>
+            <div style="margin-bottom: 16px;">Доступ за $2.99/месяц откроет:</div>
+            
+            <div class="feature-item">Полную версию викторины</div>
+            <div class="feature-item">Участие в рейтинге за $100-$1000</div>
+            <div class="feature-item">Отсутствие рекламы</div>
+            <div class="feature-item">Отмена в любой момент</div>
+            
+            <button class="btn" style="margin-top: 20px;" onclick="processSubscription()">ОПЛАТИТЬ $2.99/МЕС</button>
+            <button class="btn btn-secondary" style="margin-top: 8px;" onclick="hideSubscribePopup()">Продолжить бесплатно</button>
+            
+            <div style="font-size: 12px; margin-top: 16px; opacity: 0.7;">
+                Нажимая кнопку, вы соглашаетесь с условиями
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Игровое состояние
+        const gameState = {
+            currentQuestion: 0,
+            score: 0,
+            coins: 0,
+            timeLeft: 30,
+            timer: null,
+            gameCoins: 0,
+            gameScore: 0,
+            correctCount: 0,
+            totalGames: 0,
+            bestScore: 0,
+            currentLevel: 'easy',
+            questions: [],
+            correctAnswers: 0
+        };
+
+        let gameEnded = false;
+        let freeAnswersUsed = 0;
+        const MAX_FREE_ANSWERS = 2;
+
+        // Функции управления экранами
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function showHomeScreen() {
+            showScreen('homeScreen');
+            updateStats();
+        }
+
+        function showLevelScreen() {
+            showScreen('levelScreen');
+        }
+
+        function showGameScreen() {
+            showScreen('gameScreen');
+            startTimer();
+        }
+
+        function showResultScreen() {
+            showScreen('resultScreen');
+            displayResults();
+        }
+
+        function showSubscribePopup() {
+            document.getElementById('subscribePopup').style.display = 'flex';
+        }
+
+        function hideSubscribePopup() {
+            document.getElementById('subscribePopup').style.display = 'none';
+        }
+
+        // Остальные функции игры (аналогично предыдущей версии)
+        // ... (вставьте сюда все функции из предыдущего main.js)
+        
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            // Инициализация игры
+            loadData();
+            updateDisplay();
+            updateStats();
+            
+            // Обработка кнопок
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 100);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
